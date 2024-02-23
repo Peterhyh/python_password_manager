@@ -1,5 +1,23 @@
 from tkinter import *
 
+# Functions ---------------------------------
+
+
+def handleSubmit():
+    website = website_entry.get()
+    password = password_entry.get()
+    email = email_and_username_label_entry.get()
+
+    with open("./passwords.txt") as data:
+        password_data = data.read()
+
+    with open("./passwords.txt", mode="w") as passwords:
+        passwords.write(f"{password_data}\n{website} | {email} | {password}")
+
+    website_entry.delete(0, END)
+    password_entry.delete(0, END)
+
+
 # UI ---------------------------------
 window = Tk()
 window.title("Password Manager")
@@ -14,26 +32,28 @@ canvas.grid(column=1, row=0)
 
 # Labels ---------------------------------
 website_label = Label(text="Website:")
+website_label.grid(column=0, row=1)
 email_and_username_label = Label(text="Email/Username:")
+email_and_username_label.grid(column=0, row=2)
 password_label = Label(text="Password:")
+password_label.grid(column=0, row=3)
 
 # Entries ---------------------------------
 website_entry = Entry(width=35)
+website_entry.grid(column=1, row=1, columnspan=2)
+website_entry.focus()  # allows user to type immediately after the program is launched
 email_and_username_label_entry = Entry(width=35)
+email_and_username_label_entry.grid(column=1, row=2, columnspan=2)
+# prepopulates the email/username in the entry box
+email_and_username_label_entry.insert(0, "peterhyh@yahoo.com")
 password_entry = Entry(width=20)
+password_entry.grid(column=1, row=3)
 
 # Buttons ---------------------------------
 generate_button = Button(text="Generate Password", width=11)
-add_button = Button(text="Add", width=32)
-
-# Grids ---------------------------------
-website_label.grid(column=0, row=1)
-website_entry.grid(column=1, row=1, columnspan=2)
-email_and_username_label.grid(column=0, row=2)
-email_and_username_label_entry.grid(column=1, row=2, columnspan=2)
-password_label.grid(column=0, row=3)
-password_entry.grid(column=1, row=3)
 generate_button.grid(column=2, row=3)
+add_button = Button(text="Add", width=32, command=handleSubmit)
 add_button.grid(column=1, row=4, columnspan=2)
+
 
 window.mainloop()
