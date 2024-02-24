@@ -8,11 +8,8 @@ def handleSubmit():
     password = password_entry.get()
     email = email_and_username_label_entry.get()
 
-    with open("./passwords.txt") as data:
-        password_data = data.read()
-
-    with open("./passwords.txt", mode="w") as passwords:
-        passwords.write(f"{password_data}\n{website} | {email} | {password}")
+    with open("./passwords.txt", "a") as passwords:
+        passwords.write(f"{website} | {email} | {password}\n")
 
     website_entry.delete(0, END)
     password_entry.delete(0, END)
