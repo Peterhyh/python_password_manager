@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 # Functions ---------------------------------
 
@@ -8,11 +9,15 @@ def handleSubmit():
     password = password_entry.get()
     email = email_and_username_label_entry.get()
 
-    with open("./passwords.txt", "a") as passwords:
-        passwords.write(f"{website} | {email} | {password}\n")
+    user_response = messagebox.askyesno(
+        title="Confirm", message=f"Please verify the details below:\nEmail/Username: {email}\nPassword: {password}\nWould you like to save?")
+    print(user_response)
 
-    website_entry.delete(0, END)
-    password_entry.delete(0, END)
+    if user_response:
+        with open("./passwords.txt", "a") as passwords:
+            passwords.write(f"{website} | {email} | {password}\n")
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
 
 
 # UI ---------------------------------
