@@ -18,6 +18,10 @@ def handleSubmit():
             passwords.write(f"{website} | {email} | {password}\n")
         website_entry.delete(0, END)
         password_entry.delete(0, END)
+        messagebox.showinfo(
+            title="Success", message="Password was saved successfully")
+    else:
+        messagebox.showinfo(title="Canceled", message="Canceled")
 
 
 # UI ---------------------------------
