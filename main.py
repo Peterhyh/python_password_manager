@@ -19,9 +19,9 @@ def handleSubmit():
         website_entry.delete(0, END)
         password_entry.delete(0, END)
         messagebox.showinfo(
-            title="Success", message="Password was saved successfully")
+            title="Confirmed", message="Password was saved successfully")
     else:
-        messagebox.showinfo(title="Canceled", message="Canceled")
+        messagebox.showinfo(title="Confirmed", message="Canceled")
 
 
 # UI ---------------------------------
