@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-import random
+from random import choice, shuffle, randint
 
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
@@ -8,28 +8,21 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 symbols = ['!', '#', '$', '%', '&', '&', '*', '(', ')', '+']
 
-
 # Functions ---------------------------------
+
 
 def generatePassword():
     password_entry.delete(0, END)
     password_combinations = []
-    rn_letter = random.randint(8, 12)
-    rn_number = random.randint(2, 4)
-    rn_symbol = random.randint(2, 4)
-
-    password_letters = [random.choice(letters) for _ in range(rn_letter)]
-    password_numbers = [random.choice(numbers) for _ in range(rn_number)]
-    password_symbol = [random.choice(symbols) for _ in range(rn_symbol)]
-
+    rn_letter = randint(8, 12)
+    rn_number = randint(2, 4)
+    rn_symbol = randint(2, 4)
+    password_letters = [choice(letters) for _ in range(rn_letter)]
+    password_numbers = [choice(numbers) for _ in range(rn_number)]
+    password_symbol = [choice(symbols) for _ in range(rn_symbol)]
     password_combinations = password_letters + password_numbers + password_symbol
-
-    random.shuffle(password_combinations)
-
-    new_password = ""
-    for char in password_combinations:
-        new_password += char
-
+    shuffle(password_combinations)
+    new_password = "".join(password_combinations)
     password_entry.insert(0, new_password)
 
 
@@ -37,14 +30,12 @@ def handleSubmit():
     website = website_entry.get()
     password = password_entry.get()
     email = email_and_username_label_entry.get()
-
     if website == "" or password == "" or email == "":
         messagebox.showinfo(
             title="Error", message="Unable to save, fields cannot be blank.")
     else:
         user_response = messagebox.askyesno(
             title="Confirm", message=f"Please verify the details below:\nEmail/Username: {email}\nPassword: {password}\nWould you like to save?")
-
         if user_response:
             with open("./passwords.txt", "a") as passwords:
                 passwords.write(f"{website} | {email} | {password}\n")
@@ -60,9 +51,7 @@ def handleSubmit():
 window = Tk()
 window.title("Password Manager")
 window.config(padx=50, pady=50)
-
 logo = PhotoImage(file="logo.png")
-
 canvas = Canvas(width=200, height=200)
 canvas.create_image(100, 100, image=logo)
 canvas.grid(column=1, row=0)
