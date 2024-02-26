@@ -9,19 +9,22 @@ def handleSubmit():
     password = password_entry.get()
     email = email_and_username_label_entry.get()
 
-    user_response = messagebox.askyesno(
-        title="Confirm", message=f"Please verify the details below:\nEmail/Username: {email}\nPassword: {password}\nWould you like to save?")
-    print(user_response)
-
-    if user_response:
-        with open("./passwords.txt", "a") as passwords:
-            passwords.write(f"{website} | {email} | {password}\n")
-        website_entry.delete(0, END)
-        password_entry.delete(0, END)
+    if website == "" or password == "" or email == "":
         messagebox.showinfo(
-            title="Confirmed", message="Password was saved successfully")
+            title="Error", message="Unable to save, fields cannot be blank.")
     else:
-        messagebox.showinfo(title="Confirmed", message="Canceled")
+        user_response = messagebox.askyesno(
+            title="Confirm", message=f"Please verify the details below:\nEmail/Username: {email}\nPassword: {password}\nWould you like to save?")
+
+        if user_response:
+            with open("./passwords.txt", "a") as passwords:
+                passwords.write(f"{website} | {email} | {password}\n")
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
+            messagebox.showinfo(
+                title="Confirmed", message="Password was saved successfully")
+        else:
+            messagebox.showinfo(title="Confirmed", message="Canceled")
 
 
 # UI ---------------------------------
