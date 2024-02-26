@@ -1,7 +1,39 @@
 from tkinter import *
 from tkinter import messagebox
+import random
+
+
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
+           'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+symbols = ['!', '#', '$', '%', '&', '&', '*', '(', ')', '+']
+
 
 # Functions ---------------------------------
+
+def generatePassword():
+    password_entry.delete(0, END)
+    password_combinations = []
+    rn_letter = random.randint(8, 12)
+    rn_number = random.randint(2, 4)
+    rn_symbol = random.randint(2, 4)
+
+    for _ in range(rn_letter):
+        password_combinations.append(random.choice(letters))
+
+    for _ in range(rn_number):
+        password_combinations.append(random.choice(numbers))
+
+    for _ in range(rn_symbol):
+        password_combinations.append(random.choice(symbols))
+
+    random.shuffle(password_combinations)
+
+    new_password = ""
+    for char in password_combinations:
+        new_password += char
+
+    password_entry.insert(0, new_password)
 
 
 def handleSubmit():
@@ -59,7 +91,8 @@ password_entry = Entry(width=20)
 password_entry.grid(column=1, row=3)
 
 # Buttons ---------------------------------
-generate_button = Button(text="Generate Password", width=11)
+generate_button = Button(text="Generate Password",
+                         width=11, command=generatePassword)
 generate_button.grid(column=2, row=3)
 add_button = Button(text="Add", width=32, command=handleSubmit)
 add_button.grid(column=1, row=4, columnspan=2)
