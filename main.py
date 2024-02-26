@@ -18,14 +18,11 @@ def generatePassword():
     rn_number = random.randint(2, 4)
     rn_symbol = random.randint(2, 4)
 
-    for _ in range(rn_letter):
-        password_combinations.append(random.choice(letters))
+    password_letters = [random.choice(letters) for _ in range(rn_letter)]
+    password_numbers = [random.choice(numbers) for _ in range(rn_number)]
+    password_symbol = [random.choice(symbols) for _ in range(rn_symbol)]
 
-    for _ in range(rn_number):
-        password_combinations.append(random.choice(numbers))
-
-    for _ in range(rn_symbol):
-        password_combinations.append(random.choice(symbols))
+    password_combinations = password_letters + password_numbers + password_symbol
 
     random.shuffle(password_combinations)
 
