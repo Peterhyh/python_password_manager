@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 from random import choice, shuffle, randint
-from pyperclip import copy
+import pyperclip
+import json
 
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
@@ -10,6 +11,25 @@ numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 symbols = ['!', '#', '$', '%', '&', '&', '*', '(', ')', '+']
 
 # Functions ---------------------------------
+
+
+def handleSearch():
+    website = website_entry.get()
+    try:
+        with open("data.json") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(
+            title="Error", message="No data file found.")
+    else:
+        if website in data:
+            email = data[website]['email']
+            password = data[website]['password']
+            messagebox.showinfo(
+                title="Info", message=f"Email: {email}\nPassword: {password}")
+        else:
+            messagebox.showinfo(
+                title="Error", message=f"No details for {website} exists.")
 
 
 def generatePassword():
@@ -25,13 +45,18 @@ def generatePassword():
     shuffle(password_combinations)
     new_password = "".join(password_combinations)
     password_entry.insert(0, new_password)
-    copy(new_password)
+    pyperclip.copy(new_password)
 
 
 def handleSubmit():
     website = website_entry.get()
     password = password_entry.get()
     email = email_and_username_label_entry.get()
+    json_password = {
+        website: {
+            "email": email,
+            "password": password,
+        }}
     if website == "" or password == "" or email == "":
         messagebox.showinfo(
             title="Error", message="Unable to save, fields cannot be blank.")
@@ -39,12 +64,23 @@ def handleSubmit():
         user_response = messagebox.askyesno(
             title="Confirm", message=f"Please verify the details below:\nEmail/Username: {email}\nPassword: {password}\nWould you like to save?")
         if user_response:
-            with open("./passwords.txt", "a") as passwords:
-                passwords.write(f"{website} | {email} | {password}\n")
-            website_entry.delete(0, END)
-            password_entry.delete(0, END)
-            messagebox.showinfo(
-                title="Confirmed", message="Password was saved successfully")
+            try:
+                with open("data.json", "r") as data_file:
+                    data = json.load(data_file)
+            except FileNotFoundError:
+                with open("data.json", "w") as new_file_data:
+                    json.dump(json_password, new_file_data, indent=4)
+                messagebox.showinfo(
+                    title="Confirmed", message="Password was saved successfully")
+            else:
+                data.update(json_password)
+                with open("data.json", "w") as write_data:
+                    json.dump(data, write_data, indent=4)
+                messagebox.showinfo(
+                    title="Confirmed", message="Password was saved successfully")
+            finally:
+                website_entry.delete(0, END)
+                password_entry.delete(0, END)
         else:
             messagebox.showinfo(title="Confirmed", message="Canceled")
 
@@ -68,8 +104,8 @@ password_label = Label(text="Password:")
 password_label.grid(column=0, row=3)
 
 # Entries ---------------------------------
-website_entry = Entry(width=35)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=20)
+website_entry.grid(column=1, row=1)
 website_entry.focus()  # allows user to type immediately after the program is launched
 email_and_username_label_entry = Entry(width=35)
 email_and_username_label_entry.grid(column=1, row=2, columnspan=2)
@@ -79,6 +115,8 @@ password_entry = Entry(width=20)
 password_entry.grid(column=1, row=3)
 
 # Buttons ---------------------------------
+search_button = Button(text="Search", width=11, command=handleSearch)
+search_button.grid(column=2, row=1)
 generate_button = Button(text="Generate Password",
                          width=11, command=generatePassword)
 generate_button.grid(column=2, row=3)
