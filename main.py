@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from random import choice, shuffle, randint
+from pyperclip import copy
 
 
 letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
@@ -24,6 +25,7 @@ def generatePassword():
     shuffle(password_combinations)
     new_password = "".join(password_combinations)
     password_entry.insert(0, new_password)
+    copy(new_password)
 
 
 def handleSubmit():
